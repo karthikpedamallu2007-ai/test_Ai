@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenith AI Chatbot - Next-Gen Conversational Intelligence</title>
+  <meta name="description" content="A state-of-the-art conversational AI chatbot powered by Zenith AI with streaming responses, multi-turn memory, voice capabilities, and real-time code highlighting.">
+  <meta name="keywords" content="Zenith AI, Chatbot, AI Assistant, LLM, Streaming AI, Conversational AI">
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Markdown & Syntax Highlighting -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+
+  <!-- Frontend Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-dark">
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <div class="app-container">
+    <!-- Collapsible Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Conversation Navigation">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon-wrapper">
+            <svg class="brand-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="url(#sparkle-gradient)" stroke="none"/>
+              <defs>
+                <linearGradient id="sparkle-gradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#38bdf8" />
+                  <stop offset="0.5" stop-color="#818cf8" />
+                  <stop offset="1" stop-color="#c084fc" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="brand-title">Zenith AI</span>
+        </div>
+        <button id="btn-close-sidebar" class="icon-btn mobile-only" aria-label="Close sidebar">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <!-- New Chat Button -->
+      <button id="btn-new-chat" class="new-chat-btn" aria-label="Start a new chat session">
+        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span>New Chat</span>
+      </button>
+
+      <!-- Search conversations -->
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="chat-search" placeholder="Search conversations..." aria-label="Search conversations">
+      </div>
+
+      <!-- Chat History List -->
+      <div class="chat-history-section">
+        <div class="section-label">Recent Chats</div>
+        <div class="chat-list" id="chat-list" role="list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Sidebar Footer / Controls -->
+      <div class="sidebar-footer">
+        <div class="status-indicator-badge" id="api-status-badge" role="button" tabindex="0" title="Click to view API Key settings">
+          <span class="status-dot status-unknown" id="status-dot"></span>
+          <span class="status-text" id="status-text">Checking API Key...</span>
+        </div>
+
+        <div class="footer-actions">
+          <button id="btn-open-settings" class="footer-btn" title="Model & API Settings" aria-label="Open settings">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>Settings</span>
+          </button>
+          <button id="btn-clear-history" class="footer-btn danger" title="Clear all chat history" aria-label="Clear chat history">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Clear All</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Chat Work Area -->
+    <main class="main-content" role="main">
+      <!-- Top Navigation & Controls Header -->
+      <header class="chat-header">
+        <div class="header-left">
+          <button id="btn-toggle-sidebar" class="icon-btn" aria-label="Toggle sidebar navigation">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="current-session-info">
+            <h1 class="session-title" id="current-chat-title">New Conversation</h1>
+            <div class="session-meta">
+              <span class="active-model-chip" id="header-model-chip">Gemini 3.5 Flash-Lite</span>
+              <span class="active-persona-chip" id="header-persona-chip">General Assistant</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Persona Selector Dropdown -->
+          <div class="dropdown-wrapper">
+            <select id="persona-select" class="dropdown-select" aria-label="Select AI Persona">
+              <option value="general">🤖 General Assistant</option>
+              <option value="engineer">💻 Software Engineer</option>
+              <option value="researcher">🔬 Scientific Researcher</option>
+              <option value="creative">✍️ Creative Writer</option>
+              <option value="tutor">🎓 Patient Tutor</option>
+              <option value="concise">⚡ Ultra-Concise Mode</option>
+            </select>
+          </div>
+
+          <!-- Export Menu -->
+          <div class="export-dropdown-container">
+            <button id="btn-export-chat" class="icon-btn" title="Export conversation" aria-label="Export conversation">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
+          </div>
+
+          <!-- Open Settings Button -->
+          <button id="btn-header-settings" class="icon-btn" title="Settings" aria-label="Open settings">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Messages Scroll Area -->
+      <section class="messages-container" id="messages-container" aria-live="polite">
+        <!-- Hero Welcome View (Shown when chat is empty) -->
+        <div class="welcome-hero" id="welcome-hero">
+          <div class="hero-sparkle-container">
+            <div class="hero-glow-ring"></div>
+            <svg class="hero-sparkle" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="url(#hero-grad)"/>
+              <defs>
+                <linearGradient id="hero-grad" x1="2" y1="2" x2="22" y2="22">
+                  <stop stop-color="#38bdf8"/>
+                  <stop offset="0.5" stop-color="#818cf8"/>
+                  <stop offset="1" stop-color="#c084fc"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h2 class="hero-title">Meet Zenith AI Assistant</h2>
+          <p class="hero-subtitle">High-speed streaming intelligence powered by state-of-the-art LLMs. What can we accomplish together?</p>
+
+          <!-- Suggestion Cards -->
+          <div class="suggestion-grid">
+            <button class="suggestion-card" data-prompt="Explain quantum computing principles with a simple real-world analogy.">
+              <div class="card-icon">🧠</div>
+              <div class="card-content">
+                <span class="card-headline">Explain Complex Concepts</span>
+                <span class="card-subtext">Quantum computing with simple analogies</span>
+              </div>
+            </button>
+
+            <button class="suggestion-card" data-prompt="Write a clean Node.js script using async/await with retry logic and exponential backoff.">
+              <div class="card-icon">💻</div>
+              <div class="card-content">
+                <span class="card-headline">Generate Production Code</span>
+                <span class="card-subtext">Node.js retry logic with exponential backoff</span>
+              </div>
+            </button>
+
+            <button class="suggestion-card" data-prompt="Compare microservices architecture with modular monoliths: pros, cons, and when to pick each.">
+              <div class="card-icon">🏗️</div>
+              <div class="card-content">
+                <span class="card-headline">System Architecture</span>
+                <span class="card-subtext">Microservices vs Modular Monolith trade-offs</span>
+              </div>
+            </button>
+
+            <button class="suggestion-card" data-prompt="Brainstorm 5 innovative SaaS business ideas that leverage multimodal AI in 2026.">
+              <div class="card-icon">🚀</div>
+              <div class="card-content">
+                <span class="card-headline">Creative Ideation</span>
+                <span class="card-subtext">5 innovative multimodal AI startup concepts</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat message thread -->
+        <div class="chat-thread" id="chat-thread">
+          <!-- Messages will be dynamically rendered here -->
+        </div>
+
+        <!-- Scroll-To-Bottom Floating Button -->
+        <button id="btn-scroll-bottom" class="scroll-bottom-btn" aria-label="Scroll to newest message">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        </button>
+      </section>
+
+      <!-- Bottom Chat Composer Area -->
+      <footer class="composer-container">
+        <!-- Floating Stop Button during generation -->
+        <div class="generation-controls" id="generation-controls" style="display: none;">
+          <button id="btn-stop-generation" class="stop-btn" aria-label="Stop generation">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg>
+            <span>Stop Generating</span>
+          </button>
+        </div>
+
+        <!-- Input Box -->
+        <div class="input-card">
+          <div class="input-toolbar-top">
+            <span class="token-estimate" id="char-counter">0 chars</span>
+            <div class="toolbar-badges">
+              <span class="mini-badge" id="streaming-badge">⚡ Streaming enabled</span>
+            </div>
+          </div>
+
+          <div class="input-row">
+            <textarea
+              id="user-input"
+              class="chat-textarea"
+              placeholder="Ask Zenith AI anything... (Press Enter to send, Shift+Enter for new line)"
+              rows="1"
+              aria-label="Type your message"
+            ></textarea>
+
+            <div class="input-actions">
+              <!-- Voice Microphone Button -->
+              <button id="btn-mic" class="action-btn mic-btn" title="Voice Input (Speech-to-Text)" aria-label="Toggle voice input">
+                <svg class="mic-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+              </button>
+
+              <!-- Send Button -->
+              <button id="btn-send" class="action-btn send-btn" title="Send message" aria-label="Send message">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="composer-caption">
+          Zenith AI can produce inaccurate info about people, places, or facts. Verify critical information.
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Modal: Settings & API Configuration -->
+  <div class="modal-backdrop" id="settings-modal" aria-hidden="true" role="dialog" aria-labelledby="settings-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <h2 id="settings-title">Zenith AI Configuration</h2>
+        </div>
+        <button id="btn-close-settings" class="icon-btn" aria-label="Close settings">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- API Key Field -->
+        <div class="form-group">
+          <div class="label-with-link">
+            <label for="settings-api-key">Gemini API Key</label>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="link-small">Get Free API Key ↗</a>
+          </div>
+          <div class="input-with-button">
+            <input type="password" id="settings-api-key" placeholder="AIzaSy..." autocomplete="off">
+            <button id="btn-toggle-key-visibility" class="mini-btn" type="button" title="Show/Hide Key">👁️</button>
+            <button id="btn-test-key" class="btn-secondary" type="button">Test Key</button>
+          </div>
+          <p class="field-hint" id="key-hint">If left blank, the app will use the key configured in the server's .env file.</p>
+          <div id="test-key-result" class="test-result-box" style="display: none;"></div>
+        </div>
+
+        <!-- Model Selection -->
+        <div class="form-group">
+          <label for="settings-model">Gemini Model</label>
+          <select id="settings-model">
+            <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (Recommended - High Speed &amp; Accuracy)</option>
+            <option value="gemini-3.8-flash">Gemini 3.8 Flash (Next-Gen Flagship Intelligence)</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          </select>
+        </div>
+
+        <!-- Temperature Slider -->
+        <div class="form-group">
+          <div class="slider-header">
+            <label for="settings-temperature">Creativity (Temperature): <span id="temp-val" class="highlight-val">0.7</span></label>
+            <span class="sub-label" id="temp-desc">Balanced &amp; versatile</span>
+          </div>
+          <input type="range" id="settings-temperature" min="0" max="1" step="0.05" value="0.7">
+        </div>
+
+        <!-- Max Output Tokens -->
+        <div class="form-group">
+          <div class="slider-header">
+            <label for="settings-tokens">Max Output Tokens: <span id="tokens-val" class="highlight-val">4096</span></label>
+          </div>
+          <input type="range" id="settings-tokens" min="512" max="8192" step="256" value="4096">
+        </div>
+
+        <!-- Custom System Instruction -->
+        <div class="form-group">
+          <label for="settings-system-prompt">System Instructions (Custom Personality / Guidelines)</label>
+          <textarea id="settings-system-prompt" rows="3" placeholder="You are an expert AI assistant. Provide thorough, well-reasoned answers..."></textarea>
+          <p class="field-hint">Defines how the AI responds across all turns in this session.</p>
+        </div>
+
+        <!-- Text-to-Speech Voice Toggle -->
+        <div class="form-group">
+          <label for="settings-tts-voice">Speech Synthesis Voice</label>
+          <select id="settings-tts-voice">
+            <option value="">Default System Voice</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-settings" class="btn-ghost">Cancel</button>
+        <button id="btn-save-settings" class="btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Modular Frontend Scripts (Clean Separation: API -> Voice -> App) -->
+  <script src="js/api.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
